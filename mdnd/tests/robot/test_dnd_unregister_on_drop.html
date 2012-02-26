@@ -1,0 +1,60 @@
+<html>
+	<head>
+		<title>Unregister area on drop</title>
+		
+		<script type="text/javascript" 
+			src="../../../../dojo/dojo.js" 
+			djConfig="isDebug: true">
+		</script>
+		
+		<script type="text/javascript">
+			dojo.require("dijit.robotx");	
+
+			dojo.addOnLoad(function(){			
+				doh.robot.initRobot('../functionalTests/test_dnd_unregister_on_drop.html');
+				
+				doh.register("test_dnd_unregister_on_drop", 
+					[
+						{
+							name: "dragAndUnregister",
+							timeout:10000,
+							runTest: function(){
+
+								// While dragging we unregister the area to programmatically move the nodes around
+								var d = new doh.Deferred();
+								var ok = true;
+								window.onerror = function(msg) {
+									// Moveable was throwning an error on mouse up.
+									// Ignore 'n is null' error. This is coming from doh.robot (I think?)
+									if(msg !== 'n is null') {
+										ok = false;
+									}
+								}
+
+								doh.robot.mouseMove(55, 50, 62, 920, true);
+								doh.robot.mouseMoveAt(function(){ return document.getElementsByTagName('TD')[2]; }, 123, 100, 11, 6);
+								doh.robot.mousePress({left:true, middle:false, right:false}, 1);
+								doh.robot.mouseMoveAt(function(){ return document.getElementsByTagName('TD')[2]; }, 1, 100, 12, 6);
+								doh.robot.mouseMove(90, 50, 93, 584, true);
+								doh.robot.mouseRelease({left:true, middle:false, right:false}, 226);
+
+								doh.robot.sequence(function(){
+									if(ok){
+										d.callback(true);
+									}else{
+										d.errback(new Error('Error was thrown.'));
+									}
+									}, 1000);
+								return d;
+							}
+						}
+					]
+				);
+				doh.run();
+			});
+		</script>
+		<style type="text/css"></style>
+	</head>
+	<body>
+	</body>
+</html>

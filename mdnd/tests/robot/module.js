@@ -11,6 +11,8 @@ try{
 			dojo.moduleUrl("dojox.mdnd","tests/robot/test_dnd_dndToDojo.html"),60000);
 	doh.registerUrl("dojox.mdnd.tests.robot.DndFromDojo",
 			dojo.moduleUrl("dojox.mdnd","tests/robot/test_dnd_dndFromDojo.html"),60000);
+	doh.registerUrl("dojox.mdnd.tests.robot.UnregisterAreaOnDrop",
+			dojo.moduleUrl("dojox.mdnd","tests/robot/test_dnd_unregister_on_drop.html"),60000);
 }catch(e){
 	doh.debug(e);
 }
