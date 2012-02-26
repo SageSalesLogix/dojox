@@ -192,7 +192,6 @@ define([
 			//		Calls the onDragEnd method.
 			// e:
 			//		a DOM event
-	
 			if (this._isDragging){
 				dojo.stopEvent(e);
 				this._isDragging = false;
@@ -200,11 +199,16 @@ define([
 					this.autoScroll.stopAutoScroll();
 				}
 				delete this.onMove;
+				
 				this.onDragEnd(this.node);
-				this.node.focus();
+				if(this.node) {
+					this.node.focus();
+				}
 			}
-			dojo.disconnect(this.events.pop());
-			dojo.disconnect(this.events.pop());
+			if(this.events) {
+				dojo.disconnect(this.events.pop());
+				dojo.disconnect(this.events.pop());
+			}
 		},
 		
 		onDragStart: function(/*DOMNode*/node, /*Object*/coords, /*Object*/size){

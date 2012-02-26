@@ -1,0 +1,81 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+		"http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+
+	<title>Drag And Drop - AutoScroll</title>
+
+	<link rel="stylesheet" type="text/css" href="../../../../dojo/resources/dojo.css" />
+	<link rel="stylesheet" type="text/css" href="../../../../dijit/themes/tundra/tundra.css" />
+	<link rel="stylesheet" type="text/css" href="../../../../dijit/tests/css/dijitTests.css" />
+	
+	<link rel="stylesheet" type="text/css" href="../../resources/dnd.css" />
+	<link rel="stylesheet" type="text/css" href="../resources/test_dnd.css" />
+
+	<script type="text/javascript" src="../../../../dojo/dojo.js" djConfig="isDebug: true, parseOnLoad: true"></script>
+	
+	<script type="text/javascript">
+		dojo.require("dojox.mdnd.AreaManager");
+		dojo.require("dojox.mdnd.DropIndicator");
+		dojo.require("dojox.mdnd.dropMode.DefaultDropMode");
+		//dojo.require("dojox.robot.recorder");
+		
+		dojo.ready(function() {
+			var areaManager = dojox.mdnd.areaManager();
+			areaManager.areaClass = "mdndArea";
+			areaManager.dragHandleClass = "dragHandle";
+			areaManager.registerByClass();
+			
+			dojo.subscribe('/dojox/mdnd/drop', function(node, targetArea, indexChild) {
+				var layoutGrid = dojo.byId('grdLayout');
+				var cells = layoutGrid.rows[0].cells;
+				
+				// Swap the first and second cells
+				areaManager.unregister(cells[0]);
+				areaManager.unregister(cells[1]);
+				dojo.place(cells[0].childNodes[1], cells[1]);
+				dojo.place(cells[1].childNodes[1], cells[0]);
+				
+				areaManager.registerByNode(cells[0]);
+				areaManager.registerByNode(cells[1]);
+			});
+		});
+	</script>
+	
+	</head>
+	<body class="tundra">
+		<table id="layoutTable">
+			<tr>
+				<td vAlign="top" id="layoutContainer">
+					<table id="grdLayout" cellSpacing="0" cellPadding="0">
+						<tr>
+							<td class="mdndArea">
+								<table class="dndItem" style="border: 1px solid">
+									<tr><td>Foo</td></tr>
+								</table>
+							</td>
+							
+							<td class="mdndArea">
+								<table class="dndItem" style="border: 1px solid">
+									<tr><td>Bar</td></tr>
+								</table>
+							</td>
+							
+							<td class="mdndArea">
+								<table class="dndItem" style="border: 1px solid">
+									<tr><td>Buzz</td></tr>
+								</table>
+							</td>
+							
+							<td class="mdndArea" >
+								<table class="dndItem" style="border: 1px solid">
+									<tr><td>Bang</td></tr>
+								</table>
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+	</body>
+</html>
