@@ -1,0 +1,76 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+		"http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<title>#14925 test - IE9:Text is highlighted when selecting multiple records</title>
+
+	<style>
+		@import "../../../../util/doh/robot/robot.css";
+	</style>
+
+	<!-- required: dojo.js -->
+	<script type="text/javascript" src="../../../../dojo/dojo.js"
+		djConfig="isDebug: true"></script>
+	<script type="text/javascript">
+		dojo.require("dijit.dijit"); // optimize: load dijit layer
+		dojo.require("dijit.robotx");
+		dojo.require("dijit.tests.helpers");	// functions to help test
+
+		dojo.addOnLoad(function(){
+			var iframe = dojo.query('iframe')[0];
+
+			if (!dojo.isIE || dojo.isIE < 9) {
+				console.log("This test is for multi select with IE9 using shift key. Skipping.");
+				return;
+			}
+			doh.robot.initRobot('_DataGrid.html');
+
+			doh.register("#14925",
+			[
+				{
+					name: "IE9 Selection",
+					grid: null,
+					timeout:10000,
+					setUp: function(){
+						var params = new dojo.global.Object();
+						params.id = 'prog_grid_1';
+						params.structure = dojo.global.structure1;
+						params.store = dojo.global.structure1_store1;
+						params.query = { id: '*' };
+						this.grid = new dojo.global.dojox.grid.DataGrid(params,dojo.byId('prog_grid_1'));
+						this.grid.startup();
+					},
+					runTest: function(){
+						var d = new doh.Deferred();
+						doh.robot.mouseMove(278, 182, 1491, 10, true);
+						doh.robot.mouseClick({left:true, middle:false, right:false}, 1);
+						doh.robot.keyDown(dojo.keys.SHIFT, 10);
+						doh.robot.mouseMove(283, 263, 2, 78, true);
+						doh.robot.mouseClick({left:true, middle:false, right:false}, 11);
+						doh.robot.keyUp(dojo.keys.SHIFT, 10);
+						doh.robot.sequence(function(){
+							var doc = iframe.document || iframe.contentDocument,
+								selection = doc.getSelection();
+							if(selection.rangeCount === 0){
+								d.callback(true);
+							}else{
+								d.errback(new Error('Range count should be 0'));
+							}
+						}, 1000);
+						return d;
+					},
+					tearDown: function(){
+						var node = dojo.create('div',{id:this.grid.domNode.id, rowSelector:"20px"});
+						dojo.style(node,{width: "100%",height:"100px"});
+						var parent = this.grid.domNode.parentNode;
+						this.grid.destroyRecursive();
+						parent.appendChild(node);
+						this.grid = null;
+					}
+				}
+			]);
+			doh.run();
+		});
+	</script>
+</head>
+</html>

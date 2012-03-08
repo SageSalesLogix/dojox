@@ -13,6 +13,7 @@ try{
 	doh.registerUrl("dojox.grid.tests.robot.DataGrid_mouse", dojo.moduleUrl("dojox.grid", "tests/robot/DataGrid_mouse.html"), 99999999);
 	doh.registerUrl("dojox.grid.tests.robot.DataGrid_a11y", dojo.moduleUrl("dojox.grid", "tests/robot/DataGrid_a11y.html"), 99999999);
 	doh.registerUrl("dojox.grid.tests.robot.7815", dojo.moduleUrl("dojox.grid", "tests/robot/7815.html"), 99999999);
+	doh.registerUrl("dojox.grid.tests.robot.14925", dojo.moduleUrl("dojox.grid", "tests/robot/14925.html"), 99999999);
 }catch(e){
 	doh.debug(e);
 }

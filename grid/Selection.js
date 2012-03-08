@@ -2,8 +2,9 @@ define([
 	"dojo/_base/declare",
 	"dojo/_base/array",
 	"dojo/_base/lang",
-	"dojo/dom-attr"
-], function(declare, array, lang, domAttr){
+	"dojo/dom-attr",
+	"dojo/_base/sniff"
+], function(declare, array, lang, domAttr, has){
 
 return declare("dojox.grid.Selection", null, {
 	// summary:
@@ -233,6 +234,7 @@ return declare("dojox.grid.Selection", null, {
 	},
 
 	clickSelect: function(inIndex, inCtrlKey, inShiftKey){
+		var selection;
 		if(this.mode == 'none'){ return; }
 		this._beginUpdate();
 		if(this.mode != 'extended'){
@@ -243,6 +245,10 @@ return declare("dojox.grid.Selection", null, {
 				this.deselectAll(inIndex);
 			}
 			if(inShiftKey){
+				if (has('ie') > 8) {
+					selection = document.getSelection();
+					selection.removeAllRanges();
+				}
 				this.selectRange(lastSelected, inIndex);
 			}else if(inCtrlKey){
 				this.toggleSelect(inIndex);
