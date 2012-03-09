@@ -359,7 +359,9 @@ define([
 			this.installPage(inPageIndex);
 			this.renderPage(inPageIndex);
 			// order of operations is key above
-			this.pushPage(inPageIndex);
+			if(!inReuseNode) {
+				this.pushPage(inPageIndex);
+			}
 		},
 		needPage: function(inPageIndex, inPos){
 			var h = this.getPageHeight(inPageIndex), oh = h;
