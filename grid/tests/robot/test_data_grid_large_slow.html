@@ -1,0 +1,117 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" 
+	"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<title>Test scrolling enhanced grid with a slower data store.</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
+	<style type="text/css">
+		@import "../../../../dojo/resources/dojo.css";
+		@import "../../resources/Grid.css";
+		@import "../../resources/tundraGrid.css";
+		body {
+			font-size: 0.9em;
+			font-family: Geneva, Arial, Helvetica, sans-serif;
+		}
+		.heading {
+			font-weight: bold;
+			padding-bottom: 0.25em;
+		}
+		#grid, #grid2 {
+			width: 80em;
+			height: 25em;
+			padding: 1px;
+		}
+	</style>
+	<script type="text/javascript" src="../../../../dojo/dojo.js" 
+		djConfig="isDebug:false, parseOnLoad: true"></script>
+	<script type="text/javascript">
+		dojo.require("dijit.dijit");
+		dojo.require("dojox.grid.EnhancedGrid");
+		dojo.require("dojox.grid.tests.support.SlowItemFileReadStore");
+		dojo.require("dojo.parser");
+		dojo.require("dijit.robotx");
+		dojo.require("dijit.tests.helpers");	// functions to help test
+		//dojo.require("dojox.robot.recorder"); // CTRL + ALT + ENTER
+		
+		dojo.addOnLoad(function(){
+			doh.robot.initRobot('test_data_grid_large_slow.html');
+
+			doh.register("#15000",
+			[
+				{
+					name: "Enhanced grid breaking on slow fetches.",
+					timeout:15000,
+					setUp: function(){
+					},
+					runTest: function(){
+						var d = new doh.Deferred(),
+							i = 0,
+							len = 100, // Match the number of items in the store
+							grid = dijit.byId("grid");
+						doh.robot.mouseMove(325, 75, 1, 1000, true);
+						doh.robot.mouseClick({left:true, middle:false, right:false}, 1);
+						doh.robot.mouseMove(325, 10, 1, 10, true);
+
+						for (i = 0; i < len; i++) {
+							doh.robot.keyPress(dojo.keys.DOWN_ARROW, 1);
+						}
+
+						for (i = 0; i < len; i++) {
+							doh.robot.keyPress(dojo.keys.UP_ARROW, 10);
+						}
+						// Select the final row
+						doh.robot.mouseMove(325, 75, 1, 10, true);
+						doh.robot.mouseClick({left:true, middle:false, right:false}, 1);
+
+						doh.robot.sequence(function(){
+							var items = grid.selection.getSelected(),
+								id = grid.store.getValues(items[0], 'id');
+							if(id[0] === 0){
+									d.callback(true);
+							   }else{
+									d.errback(new Error('Wrong row selected. We should be at the first row.'));
+							   }
+						}, 9000);
+						return d;
+					},
+					tearDown: function(){
+					}
+				}
+			]);
+			doh.run();
+		});
+	</script>
+	<script type="text/javascript" src="../support/test_slow_data.js"></script>
+	<script type="text/javascript">
+		// a grid layout is an array of views.
+		var layout = [
+			[
+				{ name: 'Column 0', field: 'id' },
+				{ name: 'Column 1', field: 'col1' },
+				{ name: 'Column 2', field: 'col2' },
+				{ name: 'Column 3', field: 'col3', width: '150px' },
+				{ name: 'Column 4', field: 'col4' }
+			],
+			[
+				{name: 'Column 5', field: 'col5' },
+				{name: 'Column 6', field: 'col6' },
+				{name: 'Column 7', field: 'col7' },
+				{name: 'Column 8', field: 'col3', colSpan: 2}
+			]
+		];
+	</script>
+</head>
+<body class="tundra">
+	<div class="heading">Test scrolling enhanced grid with a slower data store.</div>
+	<table dojoType="dojox.grid.EnhancedGrid"
+		jsid="grid" id="grid" 
+		store="test_store" query="{ id: '*' }" rowsPerPage="1" structure="layout" rowSelector="20px">
+		<thead>
+			<tr>
+				<th field="name" width="300px">Country/Continent Name</th>
+				<th field="type" width="auto">Type</th>
+			</tr>
+		</thead>
+	</table>
+</body>
+</html>
