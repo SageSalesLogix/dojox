@@ -1,0 +1,83 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+		"http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<title>#14926 test - Keyboard up/down arrows in grid</title>
+
+	<style>
+		@import "../../../../util/doh/robot/robot.css";
+	</style>
+
+	<!-- required: dojo.js -->
+	<script type="text/javascript" src="../../../../dojo/dojo.js"
+		djConfig="isDebug: true"></script>
+	<script type="text/javascript">
+		dojo.require("dijit.dijit"); // optimize: load dijit layer
+		dojo.require("dijit.robotx");
+		dojo.require("dijit.tests.helpers");	// functions to help test
+
+		dojo.addOnLoad(function(){
+			var iframe = dojo.query('iframe')[0];
+			doh.robot.initRobot('_DataGrid.html');
+
+			doh.register("#14925",
+			[
+				{
+					name: "Keyboard up/down arrows in grid",
+					grid: null,
+					timeout:15000,
+					setUp: function(){
+						var params = new dojo.global.Object();
+						params.id = 'prog_grid_1';
+						params.structure = dojo.global.structure1;
+						params.store = dojo.global.structure1_store1;
+						params.query = { id: '*' };
+						this.grid = new dojo.global.dojox.grid.DataGrid(params,dojo.byId('prog_grid_1'));
+						this.grid.startup();
+					},
+					runTest: function(){
+						var d = new doh.Deferred(),
+							i = 0,
+							len = 100, // Match the number of items in the store
+							grid = dijit.byId("markup_grid_1");
+						doh.robot.mouseMove(325, 182, 1, 10, true);
+						doh.robot.mouseClick({left:true, middle:false, right:false}, 1);
+						doh.robot.mouseMove(325, 50, 1, 10, true);
+
+						for (i = 0; i < len; i++) {
+							doh.robot.keyPress(dojo.keys.DOWN_ARROW, 1);
+						}
+
+						for (i = 0; i < len; i++) {
+							doh.robot.keyPress(dojo.keys.UP_ARROW, 10);
+						}
+						// Select the final row
+						doh.robot.mouseMove(325, 182, 1, 10, true);
+						doh.robot.mouseClick({left:true, middle:false, right:false}, 1);
+
+						doh.robot.sequence(function(){
+							var items = grid.selection.getSelected(),
+								id = grid.store.getValues(items[0], 'id');
+							if(id[0] === 0){
+									d.callback(true);
+							   }else{
+									d.errback(new Error('Wrong row selected. We should be at the first row.'));
+							   }
+						}, 9000);
+						return d;
+					},
+					tearDown: function(){
+						var node = dojo.create('div',{id:this.grid.domNode.id, rowSelector:"20px"});
+						dojo.style(node,{width: "100%",height:"100px"});
+						var parent = this.grid.domNode.parentNode;
+						this.grid.destroyRecursive();
+						parent.appendChild(node);
+						this.grid = null;
+					}
+				}
+			]);
+			doh.run();
+		});
+	</script>
+</head>
+</html>
