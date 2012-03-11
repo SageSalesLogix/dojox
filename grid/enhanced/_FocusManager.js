@@ -468,7 +468,6 @@ return declare("dojox.grid.enhanced._FocusManager", _FocusManager, {
 	_delayedCellFocus: function(){
 		// summary:
 		//		Overwritten
-		this.currentArea("header", true);
 		this.focusArea(this._currentAreaIdx);
 	},
 	_changeMenuBindNode: function(oldBindNode, newBindNode){
