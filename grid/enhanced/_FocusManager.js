@@ -468,7 +468,8 @@ return declare("dojox.grid.enhanced._FocusManager", _FocusManager, {
 	_delayedCellFocus: function(){
 		// summary:
 		//		Overwritten
-		this.focusArea(this._currentAreaIdx);
+        // TODO: Fix mouse/arrow scrolling issues here.
+		//this.focusArea(this._currentAreaIdx);
 	},
 	_changeMenuBindNode: function(oldBindNode, newBindNode){
 		var hm = this.grid.headerMenu;
