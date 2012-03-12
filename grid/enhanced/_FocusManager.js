@@ -465,11 +465,14 @@ return declare("dojox.grid.enhanced._FocusManager", _FocusManager, {
 			this.focusHeader();
 		}
 	},
-	_delayedCellFocus: function(){
+	_delayedCellFocus: function(inPageIndex){
 		// summary:
 		//		Overwritten
-        // TODO: Fix mouse/arrow scrolling issues here.
-		//this.focusArea(this._currentAreaIdx);
+		this.focusArea(this._currentAreaIdx);
+		if (typeof inPageIndex === 'number') {
+			this.rowIndex = inPageIndex * this.grid.scroller.rowsPerPage;
+			this.findAndFocusGridCell();
+		}
 	},
 	_changeMenuBindNode: function(oldBindNode, newBindNode){
 		var hm = this.grid.headerMenu;
