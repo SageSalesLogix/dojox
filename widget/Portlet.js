@@ -1,6 +1,7 @@
 dojo.experimental("dojox.widget.Portlet");
 dojo.provide("dojox.widget.Portlet");
 dojo.require("dijit.TitlePane");
+dojo.require("dijit._Container");
 dojo.require("dojo.fx");
 
 dojo.declare("dojox.widget.Portlet", [dijit.TitlePane, dijit._Container],{
