@@ -121,6 +121,7 @@ define([
 			this.invalidateNodes();
 			this.pageHeights = [];
 			this.height = (this.pageCount ? (this.pageCount - 1)* this.defaultPageHeight + this.calcLastPageHeight() : 0);
+			this.height = Math.min(this.height, 10737418); //Prevent the height from overflowing the browser's max height
 			this.resize();
 			this._invalidating = false;
 		},
