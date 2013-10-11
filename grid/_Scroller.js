@@ -72,6 +72,7 @@ define([
 		// private
 		page: 0,
 		pageTop: 0,
+		MAX_HEIGHT: 10737418, //Prevent the height from overflowing the browser's max height
 		// init
 		init: function(inRowCount, inKeepRows, inRowsPerPage){
 			switch(arguments.length){
@@ -121,7 +122,6 @@ define([
 			this.invalidateNodes();
 			this.pageHeights = [];
 			this.height = (this.pageCount ? (this.pageCount - 1)* this.defaultPageHeight + this.calcLastPageHeight() : 0);
-			this.height = Math.min(this.height, 10737418); //Prevent the height from overflowing the browser's max height
 			this.resize();
 			this._invalidating = false;
 		},
@@ -250,6 +250,7 @@ define([
 		},
 		// default sizing implementation
 		resize: function(){
+			this.height = Math.min(this.height, this.MAX_HEIGHT);
 			if(this.scrollboxNode){
 				this.windowHeight = this.scrollboxNode.clientHeight;
 			}
